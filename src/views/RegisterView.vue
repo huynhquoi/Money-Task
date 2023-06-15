@@ -87,13 +87,14 @@
 
 <script>
 import { ref } from "vue";
-import { useRoute } from "vue-router";
+import { useRouter } from "vue-router";
+import { useUser } from "@/composables/useUser";
 import { useSignUp } from "@/composables/useSignUp";
 
 export default {
   setup() {
-    const { error, isPending, signUp } = useSignUp();
-    const router = useRoute();
+    const { error, isPending, signUp, addWallet } = useSignUp();
+    const router = useRouter();
 
     const fullName = ref("");
     const email = ref("");
@@ -101,7 +102,20 @@ export default {
 
     async function onSubmit() {
       await signUp(email.value, password.value, fullName.value);
-      if (!error.value) router.push({ name: "profile", params: {} });
+
+      const { getUser } = useUser();
+      const { user } = getUser();
+
+      const wallet = {
+        expense: 0,
+        income: 0,
+        money: 400000,
+        name: "My Wallet",
+        userId: user.value.uid,
+        walletId: "1",
+      };
+      await addWallet(wallet);
+      if (!error.value) router.push({ name: "home", params: {} });
     }
     return { fullName, email, password, error, isPending, onSubmit };
   },

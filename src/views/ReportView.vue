@@ -50,6 +50,7 @@
 import { ref } from "vue";
 
 import useGetMoney from "@/composables/useGetMoney";
+import useGetData from "@/composables/useGetData";
 import { useUser } from "@/composables/useUser";
 import useUpdateWallet from "@/composables/useUpdateDataWallet";
 
@@ -57,6 +58,10 @@ export default {
   setup() {
     const { getUser } = useUser();
     const { user } = getUser();
+
+    const { getData } = useGetData("wallet", user.value.uid);
+    const wallet = getData();
+
     const { getMoney } = useGetMoney(
       "transactions",
       user.value.uid,
@@ -73,9 +78,17 @@ export default {
         data.value.push(transaction);
         sum += transaction.total;
       });
-      console.log(sum);
-      const { update } = useUpdateWallet(sum);
-      update();
+      let walletId = "";
+      wallet.then((querySnapshot) => {
+        querySnapshot.forEach((doc) => {
+          walletId = doc.id;
+        });
+        console.log(walletId);
+        if (walletId) {
+          const { update } = useUpdateWallet(sum, walletId);
+          update();
+        }
+      });
     });
 
     return { data };

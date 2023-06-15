@@ -1,9 +1,10 @@
 import { projectFirestore } from "@/configs/firebase";
 import { doc, updateDoc } from "firebase/firestore";
 
-const updateWallet = (sum) => {
+const updateWallet = (sum, walletId) => {
+  console.log(walletId);
   async function update() {
-    const walletRef = doc(projectFirestore, "wallet", "XirPjQayeOtisOh6bpXK");
+    const walletRef = doc(projectFirestore, "wallet", walletId);
     await updateDoc(walletRef, {
       money: 4000000 - sum,
       expense: sum,
