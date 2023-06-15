@@ -76,6 +76,7 @@
 
 <script>
 import { ref } from "vue";
+import { useRouter } from "vue-router";
 import { useSignIn } from "@/composables/useSignIn";
 
 export default {
@@ -84,9 +85,11 @@ export default {
 
     const email = ref("");
     const password = ref("");
+    const router = useRouter();
 
     async function onSubmit() {
       await signIn(email.value, password.value);
+      if (!error.value) router.push({ name: "home", params: {} });
     }
     return { email, password, error, isPending, onSubmit };
   },

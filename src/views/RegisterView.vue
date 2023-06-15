@@ -87,11 +87,13 @@
 
 <script>
 import { ref } from "vue";
+import { useRoute } from "vue-router";
 import { useSignUp } from "@/composables/useSignUp";
 
 export default {
   setup() {
     const { error, isPending, signUp } = useSignUp();
+    const router = useRoute();
 
     const fullName = ref("");
     const email = ref("");
@@ -99,6 +101,7 @@ export default {
 
     async function onSubmit() {
       await signUp(email.value, password.value, fullName.value);
+      if (!error.value) router.push({ name: "profile", params: {} });
     }
     return { fullName, email, password, error, isPending, onSubmit };
   },
