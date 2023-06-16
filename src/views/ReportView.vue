@@ -1,5 +1,5 @@
 <template>
-  <div class="row">
+  <div class="row mb-20">
     <div class="container mx-auto px-8">
       <!-- title -->
       <div class="grid grid-cols-1">

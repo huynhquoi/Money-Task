@@ -1,5 +1,5 @@
 <template>
-  <form @submit.prevent="onSubmit">
+  <form @submit.prevent="onSubmit" class="mb-20">
     <div class="row mt-2">
       <!-- Input Information -->
       <div class="bg-white rounded-lg py-4 mb-8">
@@ -22,7 +22,7 @@
             </label>
             <!-- <div class="border-b border-gray-100"></div> -->
           </div>
-          <div class="flex flex-col pb-1">
+          <div class="flex flex-col pb-1 mb-3">
             <span class="pb-1">Select Category</span>
             <label
               for="category"
@@ -197,6 +197,7 @@ import { getNewdate } from "../untils/import";
 import { useRouter } from "vue-router";
 import useCollection from "@/composables/useCollection";
 import useGetData from "@/composables/useGetData";
+import useGetMoney from "@/composables/useGetMoney";
 
 export default {
   setup() {
@@ -237,17 +238,40 @@ export default {
         color: color.value,
       };
 
+      const { getMoney } = useGetMoney(
+        "transactions",
+        user.value.uid,
+        "My wallet"
+      );
+      const transactions = getMoney();
+      let sum = 0;
+      transactions.then((querySnapshot) => {
+        querySnapshot.forEach((doc) => {
+          const transaction = doc.data();
+          sum += transaction.total;
+        });
+      });
+
+      if (sum + transaction.total < 4000000) {
+        alert("Bạn đã sài quá số tiền");
+        return;
+      }
+
+      if (!transaction.total || !transaction.category) {
+        alert("Không được chừa trống các trường này");
+        return;
+      }
+
       await addRecord(transaction);
 
       !error ? console.log(error) : router.push({ name: "report", params: {} });
     }
-    const { user } = getUser();
-    const { getData } = useGetData("category", user.value.uid);
-    const transactions = getData();
+    const { getData } = useGetData("category", "");
+    const allCategory = getData();
 
     const data = ref([]);
 
-    transactions.then((querySnapshot) => {
+    allCategory.then((querySnapshot) => {
       querySnapshot.forEach((doc) => {
         const transaction = doc.data();
         data.value.push(transaction);
