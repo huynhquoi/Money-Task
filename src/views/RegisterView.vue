@@ -1,5 +1,5 @@
 <template>
-  <div class="mt-8">
+  <div class="mt-8 mb-20">
     <div class="container mx-auto px-8">
       <!-- Start: Form -->
       <form

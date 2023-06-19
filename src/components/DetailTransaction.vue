@@ -1,6 +1,12 @@
 <template>
-  <form @submit.prevent="onSubmit" class="mb-20">
-    <div class="row mt-2">
+  <form class="mb-20">
+    <div class="transform rotate-180 flex justify-end ml-4">
+      <i
+        @click="updateDetail"
+        class="t2ico t2ico-arrow-right text-4xl text-primary"
+      ></i>
+    </div>
+    <div class="row mt-2 mx-6">
       <!-- Input Information -->
       <div class="bg-white rounded-lg py-4 mb-8">
         <div class="container mx-auto px-8">
@@ -10,12 +16,11 @@
               for="total"
               class="flex row justify-between items-center border-b focus-within:border-primary"
             >
-              <input
+              <div
                 class="text-base w-full focus:outline-none focus:border-transparent"
-                type="number"
-                placeholder="0"
-                v-model="total"
-              />
+              >
+                {{ total }}
+              </div>
               <div class="flex w-10 leading-10 justify-center mb-1">
                 <span class="inline-block px-1 text-dark text-xl">VND</span>
               </div>
@@ -28,14 +33,11 @@
               for="category"
               class="flex row justify-between items-center border-b focus-within:border-primary"
             >
-              <input
+              <div
                 class="text-base w-full focus:outline-none focus:border-transparent"
-                type="text"
-                placeholder="Select.."
-                v-model="category"
-                @focus="inSelect = true"
-                @blur="onblur"
-              />
+              >
+                {{ category }}
+              </div>
               <div
                 class="flex w-10 leading-10 items-center justify-center mb-1"
               >
@@ -45,23 +47,6 @@
                 ></span>
               </div>
             </label>
-            <div
-              v-if="inSelect"
-              class="flex flex-col justify-between items-start border"
-            >
-              <div v-for="d in data" :key="d.categoryId">
-                <div
-                  class="h-8 flex justify-start items-center ml-2"
-                  @click="
-                    (category = d.name),
-                      (color = d.color),
-                      (categoryId = d.categoryId)
-                  "
-                >
-                  {{ d.name }}
-                </div>
-              </div>
-            </div>
             <!-- <div class="border-b border-gray-100"></div> -->
           </div>
           <div class="flex flex-col pb-1 mb-3">
@@ -70,13 +55,11 @@
               for="note"
               class="flex row justify-between items-center border-b focus-within:border-primary"
             >
-              <input
+              <div
                 class="text-base w-full focus:outline-none focus:border-transparent"
-                maxlength="200"
-                type="text"
-                placeholder="Note here..."
-                v-model="note"
-              />
+              >
+                {{ note }}
+              </div>
               <div class="flex w-10 leading-10 justify-center items-end">
                 <i
                   Class="t2ico t2ico-document inline-block text-dark text-3xl"
@@ -106,13 +89,11 @@
               for="wallet"
               class="flex row justify-between items-center border-b focus-within:border-primary"
             >
-              <input
+              <div
                 class="text-base w-full focus:outline-none focus:border-transparent"
-                maxlength="200"
-                type="text"
-                placeholder="Select wallet"
-                v-model="wallet"
-              />
+              >
+                {{ wallet }}
+              </div>
               <div class="flex w-10 leading-10 justify-center items-end">
                 <i
                   Class="t2ico t2ico-wallet inline-block text-dark text-3xl"
@@ -128,7 +109,7 @@
       <div v-if="!isMoreDetails" class="row mt-8">
         <button
           class="bg-white rounded-lg py-3 w-full text-primary font-semibold cursor-pointer"
-          @click="isMoreDetails = !isMoreDetails"
+          @click="isMoreDetails = true"
         >
           More Details
         </button>
@@ -143,12 +124,11 @@
               for="location"
               class="flex row justify-between items-center border-b focus-within:border-primary"
             >
-              <input
+              <div
                 class="text-base w-full focus:outline-none focus:border-transparent"
-                type="text"
-                placeholder="0"
-                v-model="location"
-              />
+              >
+                {{ location }}
+              </div>
               <div class="flex w-10 leading-10 justify-center items-end">
                 <i
                   Class="t2ico t2ico-location inline-block text-dark text-3xl"
@@ -163,13 +143,11 @@
               for="person"
               class="flex row justify-between items-center border-b focus-within:border-primary"
             >
-              <input
+              <div
                 class="text-base w-full focus:outline-none focus:border-transparent"
-                maxlength="200"
-                type="text"
-                placeholder="Select wallet"
-                v-model="person"
-              />
+              >
+                {{ person }}
+              </div>
               <div class="flex w-10 leading-10 justify-center items-end">
                 <i
                   Class="t2ico t2ico-users inline-block text-dark text-3xl"
@@ -180,120 +158,37 @@
           </div>
         </div>
       </div>
-
-      <!-- Submit -->
-      <div class="row mt-8 w-full flex justify-center items-center">
-        <button
-          class="bg-primary rounded-lg py-3 w-80 text-white font-semibold cursor-pointer"
-          type="submit"
-        >
-          ADD
-        </button>
-      </div>
     </div>
   </form>
 </template>
 
 <script>
 import { ref } from "vue";
-import { useUser } from "@/composables/useUser";
-import { getNewdate } from "../untils/import";
-import { useRouter } from "vue-router";
-import useCollection from "@/composables/useCollection";
-import useGetData from "@/composables/useGetData";
-import useGetMoney from "@/composables/useGetMoney";
 
 export default {
-  setup() {
-    const { getUser } = useUser();
-
-    const { error, addRecord } = useCollection("transactions");
-
+  props: {
+    title: {
+      type: Object,
+    },
+  },
+  emits: ["detail"],
+  setup(props, ctx) {
     const isMoreDetails = ref(false);
-    const inSelect = ref(false);
-    const onblur = () => {
-      setTimeout(() => {
-        inSelect.value = false;
-      }, 100);
+    const total = ref(props.title.total);
+    const category = ref(props.title.category);
+    const note = ref(props.title.note);
+    const date = ref(props.title.date);
+    const wallet = ref(props.title.wallet);
+    const location = ref(props.title.location);
+    const person = ref(props.title.person);
+    const color = ref(props.title.color);
+    total.value = Math.abs(total.value);
+
+    const updateDetail = () => {
+      ctx.emit("detail");
     };
-    const router = useRouter();
-
-    const total = ref(0);
-    const category = ref("");
-    const categoryId = ref();
-    const note = ref("");
-    const wallet = ref("My wallet");
-    const location = ref("");
-    const person = ref("");
-    const date = ref(getNewdate());
-    const color = ref("bg-dark");
-
-    async function onSubmit() {
-      const { user } = getUser();
-
-      if (categoryId.value < 3) {
-        total.value = 0 - total.value;
-      }
-
-      const transaction = {
-        total: total.value,
-        category: category.value,
-        note: note.value,
-        date: date.value,
-        wallet: wallet.value,
-        location: location.value,
-        person: person.value,
-        userId: user.value.uid,
-        color: color.value,
-      };
-
-      const { getMoney } = useGetMoney(
-        "transactions",
-        user.value.uid,
-        "My wallet"
-      );
-      const transactions = getMoney();
-      let sum = 0;
-      transactions.then((querySnapshot) => {
-        querySnapshot.forEach((doc) => {
-          const transaction = doc.data();
-          sum += transaction.total;
-        });
-      });
-
-      if (!transaction.total || !transaction.category) {
-        alert("Không được chừa trống các trường này");
-        return;
-      }
-
-      if (total.value < 0) {
-        alert("Vui lòng nhập số lớn hơn 0");
-        return;
-      }
-
-      if (sum + transaction.total > 4000000) {
-        alert("Bạn đã sài quá số tiền");
-        return;
-      }
-
-      await addRecord(transaction);
-
-      !error ? console.log(error) : router.push({ name: "report", params: {} });
-    }
-    const { getData } = useGetData("category", "");
-    const allCategory = getData();
-
-    const data = ref([]);
-
-    allCategory.then((querySnapshot) => {
-      querySnapshot.forEach((doc) => {
-        const transaction = doc.data();
-        data.value.push(transaction);
-      });
-    });
 
     return {
-      onSubmit,
       isMoreDetails,
       total,
       category,
@@ -302,10 +197,8 @@ export default {
       wallet,
       location,
       person,
-      inSelect,
-      onblur,
-      data,
       color,
+      updateDetail,
     };
   },
 };

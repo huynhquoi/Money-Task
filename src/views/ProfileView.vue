@@ -1,5 +1,5 @@
 <template>
-  <div class="full-page" v-if="user">
+  <div class="full-page mb-20" v-if="user">
     <!-- Start: infor -->
 
     <div class="row">

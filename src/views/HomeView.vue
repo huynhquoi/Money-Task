@@ -25,7 +25,12 @@
                 class="font-bold text-white ml-2 flex flex-col justify-between h-full"
               >
                 <div class="text-xl mt-3">Income</div>
-                <div class="text-xl mb-3">{{ d.income }}</div>
+                <div class="text-lg mb-3" v-if="d.income !== 0">
+                  +{{ d.income }}
+                </div>
+                <div class="text-lg mb-3" v-else>
+                  {{ d.income }}
+                </div>
               </div>
               <i class="t2ico t2ico-trending-up text-5xl text-white mr-3"></i>
             </div>
@@ -36,7 +41,7 @@
                 class="font-bold text-white ml-2 flex flex-col justify-between h-full"
               >
                 <div class="text-xl mt-3">Expense</div>
-                <div class="text-xl mb-3">{{ d.expense }}</div>
+                <div class="text-lg mb-3">{{ d.expense }}</div>
               </div>
               <i class="t2ico t2ico-trending-down text-5xl text-white mr-3"></i>
             </div>

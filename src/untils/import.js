@@ -29,7 +29,6 @@ export function formatCurrency(n) {
 
 export function getNewdate() {
   let d = new Date();
-  let year = d.getFullYear();
   let month = d.getMonth() + 1;
   let day = d.getDate();
   let dayofweek = d.getDay();
@@ -65,7 +64,5 @@ export function getNewdate() {
     return monthName[month];
   };
 
-  return (
-    checkDay(dayofweek) + " " + day + " " + checkMonth(month) + ", " + year
-  );
+  return checkDay(dayofweek) + " " + day + " " + checkMonth(month);
 }

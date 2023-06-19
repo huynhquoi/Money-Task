@@ -92,6 +92,17 @@ const routes = [
         /* webpackChunkName: "transaction" */ "../views/NewTransactions.vue"
       ),
   },
+  {
+    path: "/mywallet",
+    name: "mywallet",
+    meta: {
+      text: "My Wallet",
+      leading: false,
+    },
+    beforeEnter: requireAuth,
+    component: () =>
+      import(/* webpackChunkName: "mywallet" */ "../views/MyWalletView.vue"),
+  },
 ];
 
 const router = createRouter({
